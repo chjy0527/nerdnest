@@ -9,8 +9,6 @@ COPY gradlew ./
 # Make gradlew executable
 RUN chmod +x ./gradlew
 
-RUN ./gradlew wrapper
-
 # Copy gradle configuration files
 COPY build.gradle settings.gradle ./
 
