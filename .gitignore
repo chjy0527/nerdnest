@@ -75,6 +75,7 @@ application-*.yml
 application-*.properties
 !application-test.yml
 !application-test.properties
+!application-prod.properties
 
 ### Logs ###
 logs/
