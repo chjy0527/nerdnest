@@ -3,8 +3,12 @@ FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
 # Copy gradle configuration files
-COPY build.gradle settings.gradle gradlew ./
+COPY build.gradle settings.gradle ./
 COPY gradle ./gradle
+COPY gradlew ./
+
+# Make gradlew executable
+RUN chmod +x ./gradlew
 
 # Download dependencies
 RUN ./gradlew dependencies --no-daemon
@@ -30,4 +34,4 @@ ENV SPRING_PROFILES_ACTIVE=prod
 EXPOSE 8080
 
 # Start the application
-ENTRYPOINT ["java", "-jar", "app.jar"] 
+ENTRYPOINT ["java", "-jar", "app.jar"]
