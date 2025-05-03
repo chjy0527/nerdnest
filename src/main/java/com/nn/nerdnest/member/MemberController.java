@@ -1,0 +1,117 @@
+package com.nn.nerdnest.member;
+
+import com.nn.nerdnest.member.dto.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/members")
+@RequiredArgsConstructor
+ @Tag(name = "MemberController", description = "Member API")
+public class MemberController {
+
+    private final MemberService memberService;
+
+
+    /*
+     * 기능명 : 회원가입
+     * URL  : /api/members
+     * 메소드 : POST
+     * 요청 파라미터 : MemberRequestDto
+     * 응답 파라미터 : MemberDto
+     * 응답 코드 : 201
+     * 응답 메시지 : 회원가입 성공
+     */
+    @Operation(summary = "회원가입" , description = "회원가입을 합니다.")
+    @PostMapping
+    public ResponseEntity<MemberDto> registerMember(@RequestBody MemberRequestDto memberRequestDto) {
+        MemberDto registMember = memberService.saveMember(memberRequestDto);
+        return  ResponseEntity.status(HttpStatus.CREATED).body(registMember);
+    }
+
+    /*
+     * 기능명 : 로그인
+     * URL  : /api/members/auth
+     * 메소드 : POST
+     * 요청 파라미터 : Map<String, String>
+     * 응답 파라미터 : Map<String, Object>
+     * 응답 코드 : 200
+     * 응답 메시지 : 로그인 성공
+     */
+    @Operation(summary = "로그인" , description = "로그인을 합니다.")
+    @PostMapping("/auth")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+
+        try {
+            String token = memberService.login(username, password);
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("success", true);
+            response.put("message", "로그인에 성공했습니다.");
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        }
+    }
+    /*
+    *   기능명 : 나의 정보 찾기
+    *   URL    : /api/members/recovery/myinfo
+    */
+    @Operation(summary = "나의 정보" , description = "나의 정보를 찾습니다(username, job, level).")
+    @GetMapping("/recovery/myinfo")
+    public ResponseEntity<MyUserInfoResponseDto> getMyUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        MyUserInfoResponseDto myUserInfoResponseDto = memberService.myUserInfo(userDetails.getUsername());
+        return ResponseEntity.ok(myUserInfoResponseDto);
+       // return ResponseEntity.ok(memberService.myUserInfo("jinyoung"));
+    }
+
+    /*
+     * 기능명 : 아이디 찾기
+     * URL  : /api/members/search-id
+     * 메소드 : POST
+     * 요청 파라미터 : SearchIdRequest
+     * 응답 파라미터 : SearchIdResponse
+     * 응답 코드 : 200
+     */
+    @Operation(summary = "아이디 찾기" , description = "아이디를 찾습니다.")
+    @PostMapping("/recovery/username")
+    public ResponseEntity<SearchIdResponse> searchId(@RequestBody SearchIdRequest searchIdRequest) {
+        SearchIdResponse searchIdResponse = memberService.searchIdByEmail(searchIdRequest);
+
+        if (searchIdResponse.isSuccess()) {
+            return new ResponseEntity<>(searchIdResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(searchIdResponse, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /*
+     * 기능명 : 비밀번호 찾기
+     * URL  : /api/members/search-password
+     * 메소드 : POST
+     * 구현예정..
+     */
+    @Operation(summary = "비밀번호 찾기" , description = "비밀번호를 찾습니다.")
+    @PostMapping("/recovery/password")
+    public void searchPassword(){
+
+    }
+
+
+
+}
