@@ -2,18 +2,15 @@ FROM eclipse-temurin:21-jdk AS build
 
 WORKDIR /app
 
-# Copy gradle configuration files
-COPY build.gradle settings.gradle ./
+# Copy gradle wrapper files first
 COPY gradle ./gradle
 COPY gradlew ./
 
 # Make gradlew executable
 RUN chmod +x ./gradlew
 
-# Copy the gradle wrapper files explicitly to ensure they're available
-RUN mkdir -p gradle/wrapper
-COPY gradle/wrapper/gradle-wrapper.jar gradle/wrapper/
-COPY gradle/wrapper/gradle-wrapper.properties gradle/wrapper/
+# Copy gradle configuration files
+COPY build.gradle settings.gradle ./
 
 # Download dependencies
 RUN ./gradlew dependencies --no-daemon
