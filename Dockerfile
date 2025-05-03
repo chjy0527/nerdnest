@@ -10,6 +10,11 @@ COPY gradlew ./
 # Make gradlew executable
 RUN chmod +x ./gradlew
 
+# Copy the gradle wrapper files explicitly to ensure they're available
+RUN mkdir -p gradle/wrapper
+COPY gradle/wrapper/gradle-wrapper.jar gradle/wrapper/
+COPY gradle/wrapper/gradle-wrapper.properties gradle/wrapper/
+
 # Download dependencies
 RUN ./gradlew dependencies --no-daemon
 
