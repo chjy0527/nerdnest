@@ -18,8 +18,8 @@ RUN ./gradlew dependencies --no-daemon
 # Copy the source code
 COPY src ./src
 
-# Build the application
-RUN ./gradlew build --no-daemon -x test
+# Build the application using Gradle build cache
+RUN ./gradlew build --build-cache --no-daemon -x test
 
 # Runtime stage
 FROM eclipse-temurin:21-jre
