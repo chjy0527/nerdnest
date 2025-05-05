@@ -71,7 +71,9 @@ public class MemberService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다."));
 
         return new MyUserInfoResponseDto(
+                member.getId(),
                 member.getUsername(),
+                member.getEmail(),
                 member.getJob(),
                 member.getLevel()
         );
@@ -94,5 +96,10 @@ public class MemberService {
                 .success(true)
                 .message("아이디 찾기에 성공했습니다.")
                 .build();
+    }
+
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
 }

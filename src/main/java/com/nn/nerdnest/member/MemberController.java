@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,23 +50,30 @@ public class MemberController {
      */
     @Operation(summary = "로그인" , description = "로그인을 합니다.")
     @PostMapping("/auth")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        String username = loginRequestDto.getUsername();
+        String password = loginRequestDto.getPassword();
 
         try {
             String token = memberService.login(username, password);
-            Map<String, Object> response = new HashMap<>();
-            response.put("token", token);
-            response.put("success", true);
-            response.put("message", "로그인에 성공했습니다.");
-            return ResponseEntity.ok(response);
+            Member member = memberService.findByUsername(username);
+
+
+            LoginResponseDto loginResponseDto = new LoginResponseDto(
+                    token,
+                    member.getId(),
+                    member.getName(),
+                    member.getUsername(),
+                    member.getEmail(),
+                    member.getJob(),
+                    member.getLevel(),
+                    member.isAgree()
+            );
+
+            return ResponseEntity.ok(loginResponseDto);
 
         } catch (IllegalArgumentException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
     /*
@@ -73,11 +81,10 @@ public class MemberController {
     *   URL    : /api/members/recovery/myinfo
     */
     @Operation(summary = "나의 정보" , description = "나의 정보를 찾습니다(username, job, level).")
-    @GetMapping("/recovery/myinfo")
+    @GetMapping("/myinfo")
     public ResponseEntity<MyUserInfoResponseDto> getMyUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
         MyUserInfoResponseDto myUserInfoResponseDto = memberService.myUserInfo(userDetails.getUsername());
         return ResponseEntity.ok(myUserInfoResponseDto);
-       // return ResponseEntity.ok(memberService.myUserInfo("jinyoung"));
     }
 
     /*
