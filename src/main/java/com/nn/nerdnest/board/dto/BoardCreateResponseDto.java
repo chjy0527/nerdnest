@@ -28,7 +28,7 @@ public class BoardCreateResponseDto {
         this.likeCount = board.getLikeCount();
         this.categoryName = board.getCategory().getName();
         this.writerName = board.getMember().getUsername();
-        this.writerJob = board.getMember().getJob();
+        this.writerJob = board.getMember().getJob().getName();
         this.writerLevel = board.getMember().getLevel();
 
 

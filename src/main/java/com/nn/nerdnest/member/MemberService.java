@@ -19,6 +19,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberValidator memberValidator;
     private final JwtUtil jwtUtil;
+    private final JobRepository jobRepository;
 
 
     // 회원가입
@@ -31,12 +32,19 @@ public class MemberService {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode((memberRequestDto.getPassword()));
 
+        Job job = jobRepository.findById(memberRequestDto.getJobId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 직업입니다."));
+
+        if (memberRepository.findByUsername(memberRequestDto.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("이미 사용 중인 사용자 이름입니다.");
+        }
+
         Member member = new Member(
                 memberRequestDto.getName(),
                 memberRequestDto.getEmail(),
                 memberRequestDto.getUsername(),
                 encodedPassword,
-                memberRequestDto.getJob(),
+                job,
                 memberRequestDto.getLevel(),
                 memberRequestDto.isAgree()
         );
@@ -58,6 +66,7 @@ public class MemberService {
             throw new IllegalArgumentException("존재하지 않는 아이디입니다.");
         }
 
+
         Member member = memberOptional.get();
         if(!passwordEncoder.matches(password, member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -74,7 +83,7 @@ public class MemberService {
                 member.getId(),
                 member.getUsername(),
                 member.getEmail(),
-                member.getJob(),
+                member.getJob().getId(),
                 member.getLevel()
         );
     }
@@ -102,4 +111,7 @@ public class MemberService {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
+
+    // MetaData
+
 }

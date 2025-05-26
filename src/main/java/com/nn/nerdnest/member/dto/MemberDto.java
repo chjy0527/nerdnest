@@ -8,14 +8,14 @@ public class MemberDto {
     private String name;
     private String email;
     private String username;
-    private String job;
+    private Long jobId;
     private int level;
 
     public MemberDto(Member member) {
         this.name = member.getName();
         this.email = member.getEmail();
         this.username = member.getUsername();
-        this.job = member.getJob();
+        this.jobId = member.getJob().getId();
         this.level = member.getLevel();
     }
 }

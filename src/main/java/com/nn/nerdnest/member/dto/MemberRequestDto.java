@@ -21,8 +21,8 @@ public class MemberRequestDto {
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
 
-    @NotBlank(message = "직업을 입력해주세요.")
-    private String job;
+    @NotNull(message = "직업을 입력해주세요.")
+    private Long jobId;
 
     @NotNull(message = "연차를 입력해주세요.")
     private int level;

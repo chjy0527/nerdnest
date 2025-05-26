@@ -34,14 +34,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/v3/api-docs/**",   // OpenAPI 문서 엔드포인트
+                                "/nerdnest/**",
+                                "/v3/api-docs/**",   // OpenAPI 문서
                                 "/swagger-ui/**",    // Swagger UI 리소스
                                 "/swagger-ui.html", // Swagger UI 페이지
-                                "/api/members", // 회원가입 엔드포인트
-                                "/api/members/recovery/username", // 아이디 찾기 엔드포인트
-                                "/api/members/auth",// 로그인
-                                "/",
-                                "/home"
+                                "/api/members", // 회원가입
+                                "/api/members/recovery/username", // 아이디 찾기
+                                "/api/members/auth"// 로그인
+                                // 메인화면
                         ).permitAll()// 인증 없이 접근 가능
 
                         .requestMatchers("/api/boards/**").hasRole("USER")//board 관련

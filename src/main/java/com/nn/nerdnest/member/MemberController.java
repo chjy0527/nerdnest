@@ -3,16 +3,20 @@ package com.nn.nerdnest.member;
 import com.nn.nerdnest.member.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/members")
@@ -21,6 +25,7 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     /*
@@ -34,7 +39,13 @@ public class MemberController {
      */
     @Operation(summary = "회원가입" , description = "회원가입을 합니다.")
     @PostMapping
-    public ResponseEntity<MemberDto> registerMember(@RequestBody MemberRequestDto memberRequestDto) {
+    public ResponseEntity<?> registerMember(@RequestBody @Valid  MemberRequestDto memberRequestDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errMsg = bindingResult.getFieldError().getDefaultMessage();
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("error", errMsg));
+        }
         MemberDto registMember = memberService.saveMember(memberRequestDto);
         return  ResponseEntity.status(HttpStatus.CREATED).body(registMember);
     }
@@ -65,7 +76,7 @@ public class MemberController {
                     member.getName(),
                     member.getUsername(),
                     member.getEmail(),
-                    member.getJob(),
+                    member.getJob().getId(),
                     member.getLevel(),
                     member.isAgree()
             );
@@ -76,9 +87,10 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
     /*
     *   기능명 : 나의 정보 찾기
-    *   URL    : /api/members/recovery/myinfo
+    *   URL    : /api/members/myinfo
     */
     @Operation(summary = "나의 정보" , description = "나의 정보를 찾습니다(username, job, level).")
     @GetMapping("/myinfo")
