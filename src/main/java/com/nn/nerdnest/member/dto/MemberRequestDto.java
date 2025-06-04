@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class MemberRequestDto {
+    // 회원가입시 사용자 입력 데이터
+
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;
 

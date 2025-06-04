@@ -7,7 +7,7 @@ import lombok.Getter;
 @Table(name = "job")
 @Getter
 public class Job {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

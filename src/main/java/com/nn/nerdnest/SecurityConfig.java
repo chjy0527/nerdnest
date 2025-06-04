@@ -40,8 +40,11 @@ public class SecurityConfig {
                                 "/swagger-ui.html", // Swagger UI 페이지
                                 "/api/members", // 회원가입
                                 "/api/members/recovery/username", // 아이디 찾기
-                                "/api/members/auth"// 로그인
-                                // 메인화면
+                                "/api/members/auth",// 로그인
+                                "/api/boards/category/**", // 카테고리별 조회
+                                "/api/boards/latest", // 최신글 조회
+                                "/api/boards/like",// 인기글 조회
+                                "/api/boards/kick" // nerd's kick 조회
                         ).permitAll()// 인증 없이 접근 가능
 
                         .requestMatchers("/api/boards/**").hasRole("USER")//board 관련

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponseDto {
+    // 로그인 시 보여줄 데이터 항목
 
     private String accessToken;
     private Long userId;

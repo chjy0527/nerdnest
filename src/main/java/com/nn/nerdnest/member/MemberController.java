@@ -3,7 +3,6 @@ package com.nn.nerdnest.member;
 import com.nn.nerdnest.member.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,10 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/members")
@@ -34,8 +30,6 @@ public class MemberController {
      * 메소드 : POST
      * 요청 파라미터 : MemberRequestDto
      * 응답 파라미터 : MemberDto
-     * 응답 코드 : 201
-     * 응답 메시지 : 회원가입 성공
      */
     @Operation(summary = "회원가입" , description = "회원가입을 합니다.")
     @PostMapping
@@ -54,10 +48,8 @@ public class MemberController {
      * 기능명 : 로그인
      * URL  : /api/members/auth
      * 메소드 : POST
-     * 요청 파라미터 : Map<String, String>
-     * 응답 파라미터 : Map<String, Object>
-     * 응답 코드 : 200
-     * 응답 메시지 : 로그인 성공
+     * 요청 파라미터 : LoginRequestDto
+     * 응답 파라미터 : LoginResponseDto
      */
     @Operation(summary = "로그인" , description = "로그인을 합니다.")
     @PostMapping("/auth")
@@ -89,9 +81,11 @@ public class MemberController {
     }
 
     /*
-    *   기능명 : 나의 정보 찾기
-    *   URL    : /api/members/myinfo
-    */
+     * 기능명 : 나의 정보 조회
+     * URL  : /api/members/myinfo
+     * 메소드 : GET
+     * 응답 파라미터 : MyUserInfoResponseDto
+     */
     @Operation(summary = "나의 정보" , description = "나의 정보를 찾습니다(username, job, level).")
     @GetMapping("/myinfo")
     public ResponseEntity<MyUserInfoResponseDto> getMyUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
@@ -105,7 +99,6 @@ public class MemberController {
      * 메소드 : POST
      * 요청 파라미터 : SearchIdRequest
      * 응답 파라미터 : SearchIdResponse
-     * 응답 코드 : 200
      */
     @Operation(summary = "아이디 찾기" , description = "아이디를 찾습니다.")
     @PostMapping("/recovery/username")

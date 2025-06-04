@@ -5,6 +5,8 @@ import lombok.Getter;
 
 @Getter
 public class MemberDto {
+    // 회원가입시 보여줄 데이터 항목
+
     private String name;
     private String email;
     private String username;

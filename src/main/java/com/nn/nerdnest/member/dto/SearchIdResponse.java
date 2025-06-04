@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class SearchIdResponse {
-
+    // 사용자가 로그인 찾은 후 보여줄 데이터 항목
     private String email;
     private String message;
     private boolean success;
