@@ -1,14 +1,13 @@
 package com.nn.nerdnest.board;
 
-import com.nn.nerdnest.board.dto.BoardCreateRequestDto;
-import com.nn.nerdnest.board.dto.BoardCreateResponseDto;
-import com.nn.nerdnest.board.dto.BoardListResponseDto;
+import com.nn.nerdnest.board.dto.*;
 import com.nn.nerdnest.member.Member;
 import com.nn.nerdnest.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,4 +76,49 @@ public class BoardService {
         return boardRepository.findTop3ByViewAndLikeCountDesc(pageable)
                 .stream().map(BoardListResponseDto::new).collect(Collectors.toList());
     }
+
+    // 게시글 상세
+    public BoardDetailResponseDto getBoardDetail(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        return new BoardDetailResponseDto(board.getId(), board.getTitle(), board.getContent());
+    }
+
+    // 게시글 수정
+    @Transactional
+    public BoardUpdateResponseDto getBoardUpdate(Long boardId, BoardUpdateRequestDto boardUpdateRequestDto, String loginUser) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        String writerUsername = board.getMember().getUsername();
+
+        // 작성자 유효성
+        if (!writerUsername.equals(loginUser)) {
+            throw new AccessDeniedException("작성자만 수정할 수 있습니다");
+
+        }
+
+        board.update(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
+
+        return new BoardUpdateResponseDto(
+                board.getId(),
+                board.getTitle(),
+                board.getContent(),
+                board.getMember().getUsername(),
+                board.getUpdatedAt()
+        );
+    }
+
+    // 게시글 삭제
+    @Transactional
+    public void  getBoardDelete(Long boardId, String username) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        if(!board.getMember().getUsername().equals(username)) {
+            throw new AccessDeniedException("게시글 삭제 권한이 없습니다.");
+        }
+        boardRepository.delete(board);
+    }
+
 }
