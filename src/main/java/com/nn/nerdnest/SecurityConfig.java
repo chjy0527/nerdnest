@@ -50,6 +50,7 @@ public class SecurityConfig {
                         ).permitAll()// 인증 없이 접근 가능
 
                         .requestMatchers("/api/boards/**").hasRole("USER")//board 관련
+                        .requestMatchers("/api/comments/**").hasRole("USER") // comments 관련
 
                         .anyRequest().authenticated()// 다른 요청은 인증 필요
                 )

@@ -2,6 +2,7 @@ package com.nn.nerdnest.member;
 
 import com.nn.nerdnest.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name ="member")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

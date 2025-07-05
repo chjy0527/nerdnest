@@ -23,6 +23,13 @@ public class HomeController {
         return new ResponseEntity<>("Welcome to NerdNest!", HttpStatus.OK);
     }
 
+
+    /*
+     * 기능명 : Meta Data 조회
+     * URL  : /nerdnest/meta
+     * 메소드 : GET
+     * 응답 파라미터 : MetaDataResponseDto
+     */
     @Operation(summary = "MetaData 조회" , description = "category, job 데이터 정보를 조회합니다.")
     @GetMapping("/meta")
     public MetaDataResponseDto getMetaData() {
