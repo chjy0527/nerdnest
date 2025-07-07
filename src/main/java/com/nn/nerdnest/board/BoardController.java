@@ -2,6 +2,7 @@ package com.nn.nerdnest.board;
 
 import com.nn.nerdnest.board.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class BoardController {
      * 응답 파라미터 : BoardCreateResponseDto
      */
     @Operation(summary = "등록" , description = "게시글을 등록합니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 생성 성공")
     @PostMapping
     public ResponseEntity<BoardCreateResponseDto> createBoard(
             @RequestBody @Valid BoardCreateRequestDto boardCreateRequestDto,
@@ -50,6 +52,7 @@ public class BoardController {
      * 응답 파라미터 : BoardListResponseDto
      */
     @Operation(summary = "카테고리별 조회" , description = "카테고리별 게시글을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공")
     @GetMapping("/category/{categoryId}")
     public Page<BoardListResponseDto> boardByCategory(
             @PathVariable Long categoryId,
@@ -64,6 +67,7 @@ public class BoardController {
      * 응답 파라미터 : BoardListResponseDto
      */
     @Operation(summary = "최신글 조회" , description = "최근 게시글을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "최신글 조회 성공")
     @GetMapping("/latest")
     public List<BoardListResponseDto> boardByLatest() {
         return boardService.getBoardListByCreateAt();
@@ -76,6 +80,7 @@ public class BoardController {
      * 응답 파라미터 : BoardListResponseDto
      */
     @Operation(summary = "인기글 조회" , description = "인기글을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "인기글 조회 성공")
     @GetMapping("/like")
     public List<BoardListResponseDto> boardByLike() {
         return boardService.getBoardListByLikeCount();
@@ -88,6 +93,7 @@ public class BoardController {
      * 응답 파라미터 : BoardListResponseDto
      */
     @Operation(summary = "Nerd's kick 조회" , description = "Nerd's kick 게시글 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "Nerd's kick 게시글 조회 성공")
     @GetMapping("/kick")
     public List<BoardListResponseDto> boardByViewAndLike() {
         return boardService.getBoardListByViewAndLikeCount();
@@ -100,6 +106,7 @@ public class BoardController {
      * 응답 파라미터 : BoardDetailResponseDto
      */
     @Operation(summary = "게시글 상세" , description = "게시글 상세 화면을 보여줍니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 상세 조회 성공")
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardDetailResponseDto> boardDetail(@PathVariable Long boardId) {
         BoardDetailResponseDto boardDetailResponseDto = boardService.getBoardDetail(boardId);
@@ -115,6 +122,7 @@ public class BoardController {
      * 응답 파라미터 : BoardUpdateResponseDto
      */
     @Operation(summary = "게시글 수정" , description = "게시글 내용을 수정합니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 수정 성공")
     @PutMapping("/{boardId}")
     public ResponseEntity<BoardUpdateResponseDto> boardUpdate(
             @PathVariable Long boardId,
@@ -132,6 +140,7 @@ public class BoardController {
      * 메소드 : DELETE 
      */
     @Operation(summary = "게시글 삭제" , description = "게시글을 삭제합니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 삭제 성공")
     @DeleteMapping("/{boardId}")
     public ResponseEntity<?> boardDelete(
             @PathVariable Long boardId,

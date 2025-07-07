@@ -3,6 +3,7 @@ package com.nn.nerdnest.comment;
 import com.nn.nerdnest.comment.dto.CommentRequestDto;
 import com.nn.nerdnest.comment.dto.CommentResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ public class CommentController {
      * 응답 파라미터 : CommentResponseDto
      */
     @Operation(summary = "댓글등록" , description = "댓글을 등록 합니다.")
+    @ApiResponse(responseCode = "200", description = "댓글 등록 성공")
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(@RequestBody CommentRequestDto commentRequestDto,
                                                             @AuthenticationPrincipal UserDetails userDetails) {

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 public class LoginRequestDto {
     // 사용자가 로그인 시 입력할 데이터
 
-    @Schema(description = "유저이름", example = "jin05")
+    @Schema(description = "사용자 로그인 아이디", example = "hnoggil05")
     private String username;
 
-    @Schema(description = "비밀번호", example = "wls12")
+    @Schema(description = "비밀번호", example = "sdfj@kZ5@14ds")
     private String password;
 }

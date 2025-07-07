@@ -2,6 +2,7 @@ package com.nn.nerdnest.member;
 
 import com.nn.nerdnest.member.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class MemberController {
      * 응답 파라미터 : MemberDto
      */
     @Operation(summary = "회원가입" , description = "회원가입을 합니다.")
+    @ApiResponse(responseCode = "200", description = "회원가입 성공")
     @PostMapping
     public ResponseEntity<?> registerMember(@RequestBody @Valid  MemberRequestDto memberRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -52,6 +54,7 @@ public class MemberController {
      * 응답 파라미터 : LoginResponseDto
      */
     @Operation(summary = "로그인" , description = "로그인을 합니다.")
+    @ApiResponse(responseCode = "200", description = "로그인 성공")
     @PostMapping("/auth")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         String username = loginRequestDto.getUsername();
@@ -66,8 +69,8 @@ public class MemberController {
                     token,
                     member.getId(),
                     member.getName(),
-                    member.getUsername(),
                     member.getEmail(),
+                    member.getUsername(),
                     member.getJob().getId(),
                     member.getLevel(),
                     member.isAgree()
@@ -87,6 +90,7 @@ public class MemberController {
      * 응답 파라미터 : MyUserInfoResponseDto
      */
     @Operation(summary = "나의 정보" , description = "나의 정보를 찾습니다(username, job, level).")
+    @ApiResponse(responseCode = "200", description = "나의 정보 찾기 성공")
     @GetMapping("/myinfo")
     public ResponseEntity<MyUserInfoResponseDto> getMyUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
         MyUserInfoResponseDto myUserInfoResponseDto = memberService.myUserInfo(userDetails.getUsername());
@@ -101,6 +105,7 @@ public class MemberController {
      * 응답 파라미터 : SearchIdResponse
      */
     @Operation(summary = "아이디 찾기" , description = "아이디를 찾습니다.")
+    @ApiResponse(responseCode = "200", description = "아이디 찾기 성공")
     @PostMapping("/recovery/username")
     public ResponseEntity<SearchIdResponse> searchId(@RequestBody SearchIdRequest searchIdRequest) {
         SearchIdResponse searchIdResponse = memberService.searchIdByEmail(searchIdRequest);
@@ -119,6 +124,7 @@ public class MemberController {
      * 구현예정..
      */
     @Operation(summary = "비밀번호 찾기" , description = "비밀번호를 찾습니다.")
+    @ApiResponse(responseCode = "200", description = "비밀번호 찾기 성공")
     @PostMapping("/recovery/password")
     public void searchPassword(){
 
