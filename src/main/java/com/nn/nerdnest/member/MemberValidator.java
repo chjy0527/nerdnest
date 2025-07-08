@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import com.nn.nerdnest.exception.BusinessException;
+import com.nn.nerdnest.exception.ErrorCode;
+
 @Component
 @RequiredArgsConstructor
 public class MemberValidator {
@@ -17,13 +20,13 @@ public class MemberValidator {
         // email 중복 체크
         Optional<Member> emailCheck = memberRepository.findByEmail(memberRequestDto.getEmail());
         if (emailCheck.isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+            throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
 
         // username 중복 체크
         Optional<Member> usernameCheck = memberRepository.findByUsername(memberRequestDto.getUsername());
         if (usernameCheck.isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 사용자 이름 입니다..");
+            throw new BusinessException(ErrorCode.DUPLICATE_USERNAME);
         }
     }
 

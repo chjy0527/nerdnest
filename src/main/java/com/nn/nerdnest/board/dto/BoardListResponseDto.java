@@ -27,6 +27,15 @@ public class BoardListResponseDto {
     @Schema(description = "게시글 생성시간", example = "2025-07-08 21:09:01")
     private LocalDateTime createdAt;
 
+    @Schema(description = "작성자", example = "김홍길")
+    private String writerName;
+
+    @Schema(description = "작성자 직업", example = "개발자")
+    private String writerJob;
+
+    @Schema(description = "작성자 연차", example = "5")
+    private int writerLevel;
+
     @Schema(description = "카테고리 이름", example = "백앤드")
     private String categoryName;
 
@@ -38,5 +47,8 @@ public class BoardListResponseDto {
         this.likeCount = board.getLikeCount();
         this.createdAt = board.getCreatedAt();
         this.categoryName = board.getCategory().getName();
+        this.writerName = board.getMember().getName();
+        this.writerJob = board.getMember().getJob().getName();
+        this.writerLevel = board.getMember().getLevel();
     }
 }

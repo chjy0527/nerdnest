@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import com.nn.nerdnest.exception.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +28,11 @@ public class BoardService {
     public BoardCreateResponseDto createBoard(BoardCreateRequestDto boardCreateRequestDto, String username) {
         // 사용자(username) 조회
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다,"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 카테고리(categoryId) 조회
         Category category = categoryRepository.findById(boardCreateRequestDto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
 
         // 사용자가 입력한 게시글 데이터
         Board  board = new Board(
@@ -80,7 +81,7 @@ public class BoardService {
     // 게시글 상세
     public BoardDetailResponseDto getBoardDetail(Long boardId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
         return new BoardDetailResponseDto(board.getId(), board.getTitle(), board.getContent());
     }
 
@@ -88,14 +89,13 @@ public class BoardService {
     @Transactional
     public BoardUpdateResponseDto getBoardUpdate(Long boardId, BoardUpdateRequestDto boardUpdateRequestDto, String loginUser) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
 
         String writerUsername = board.getMember().getUsername();
 
         // 작성자 유효성
         if (!writerUsername.equals(loginUser)) {
-            throw new AccessDeniedException("작성자만 수정할 수 있습니다");
-
+            throw new BusinessException(ErrorCode.BOARD_ACCESS_DENIED, "작성자만 수정할 수 있습니다.");
         }
 
         board.update(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());

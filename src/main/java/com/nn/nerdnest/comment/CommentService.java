@@ -9,6 +9,8 @@ import com.nn.nerdnest.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.nn.nerdnest.exception.BusinessException;
+import com.nn.nerdnest.exception.ErrorCode;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +26,11 @@ public class CommentService {
     public CommentResponseDto createComment(CommentRequestDto commentRequestDto, String username) {
         // 작성자 조회
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 게시글 조회
         Board board = boardRepository.findById(commentRequestDto.getBoardId())
-                .orElseThrow(() -> new RuntimeException("게시글이 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
 
         // 댓글 생성
         Comment comment = new Comment(
@@ -37,7 +39,7 @@ public class CommentService {
                 board,
                 commentRequestDto.getParentId() != null
                         ? commentRepository.findById(commentRequestDto.getParentId())
-                        .orElseThrow(() -> new RuntimeException("부모 댓글 없음"))
+                        .orElseThrow(() -> new BusinessException(ErrorCode.PARENT_COMMENT_NOT_FOUND))
                         : null
         );
 

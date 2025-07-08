@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
- @Tag(name = "MemberController", description = "Member API")
+@Tag(name = "MemberController", description = "Member API")
 public class MemberController {
 
     private final MemberService memberService;
@@ -60,27 +60,21 @@ public class MemberController {
         String username = loginRequestDto.getUsername();
         String password = loginRequestDto.getPassword();
 
-        try {
-            String token = memberService.login(username, password);
-            Member member = memberService.findByUsername(username);
+        String token = memberService.login(username, password);
+        Member member = memberService.findByUsername(username);
 
+        LoginResponseDto loginResponseDto = new LoginResponseDto(
+                token,
+                member.getId(),
+                member.getName(),
+                member.getEmail(),
+                member.getUsername(),
+                member.getJob().getId(),
+                member.getLevel(),
+                member.isAgree()
+        );
 
-            LoginResponseDto loginResponseDto = new LoginResponseDto(
-                    token,
-                    member.getId(),
-                    member.getName(),
-                    member.getEmail(),
-                    member.getUsername(),
-                    member.getJob().getId(),
-                    member.getLevel(),
-                    member.isAgree()
-            );
-
-            return ResponseEntity.ok(loginResponseDto);
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return ResponseEntity.ok(loginResponseDto);
     }
 
     /*
