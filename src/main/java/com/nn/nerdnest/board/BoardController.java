@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -149,5 +150,21 @@ public class BoardController {
         boardService.getBoardDelete(boardId, userDetails.getUsername());
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
+
+    /*
+     * 기능명 : 게시글 검색
+     * URL  : /api/boards/search
+     * 메소드 : GET
+
+    public Page<BoardListResponseDto> searchBoard(
+            @RequestParam String category,
+            @RequestParam(required = false) String keyword,
+            Pageable pageable
+    ) {
+        return boardService.se
+    }
+     */
+
+
 
 }
