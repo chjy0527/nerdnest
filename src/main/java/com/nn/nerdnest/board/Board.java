@@ -1,10 +1,14 @@
 package com.nn.nerdnest.board;
 
 import com.nn.nerdnest.BaseTimeEntity;
+import com.nn.nerdnest.comment.Comment;
 import com.nn.nerdnest.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "board")
@@ -35,6 +39,9 @@ public class Board extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     public Board(String title, String content,  Member member, Category category) {
         this.title = title;

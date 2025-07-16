@@ -39,6 +39,9 @@ public class BoardListResponseDto {
     @Schema(description = "카테고리 이름", example = "백앤드")
     private String categoryName;
 
+    @Schema(description = "댓글수", example = "5")
+    private int commentCount;
+
     public BoardListResponseDto(Board board) {
         this.id = board.getId();
         this.title = board.getTitle();
@@ -50,5 +53,6 @@ public class BoardListResponseDto {
         this.writerName = board.getMember().getName();
         this.writerJob = board.getMember().getJob().getName();
         this.writerLevel = board.getMember().getLevel();
+        this.commentCount = board.getComments() != null ? board.getComments().size() : 0;
     }
 }
