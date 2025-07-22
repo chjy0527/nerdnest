@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,14 +49,25 @@ public class BoardService {
 
     }
 
-    // 카테고리별 게시글 조회 (page -> 9개씩)
-    public Page<BoardListResponseDto> getBoardListByCategory(Long categoryId, int page) {
+    // 카테고리별 게시글 조회 및 검색기능 (page -> 9개씩)
+    public Page<BoardListResponseDto> getBoardListByCategory(Long categoryId, String keyword, int page) {
         // 카테고리 (categoryId) 조회
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("카테고리 없음"));
 
-        //  pageing : categoryId, 9개씩
-        Page<Board> boards = boardRepository.findByCategory(category, PageRequest.of(page, 9));
+        // 페이징 + 정렬 : createDate 기준 내림차순, 9개씩
+        Pageable pageable = PageRequest.of(page,9, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 검색어 유무에 따라 로직 분리
+        Page<Board> boards;
+        if(keyword == null || keyword.trim().isEmpty()){
+            // 검색어가 없거나, 공백일 때
+            boards = boardRepository.findByCategory(category,pageable);
+        } else {
+            // 검색어가 있을 때
+            boards = boardRepository.searchCategory(categoryId, keyword, pageable);
+        }
+
         return boards.map(BoardListResponseDto::new);
     }
 

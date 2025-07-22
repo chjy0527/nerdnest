@@ -55,8 +55,9 @@ public class BoardController {
     @GetMapping("/category/{categoryId}")
     public Page<BoardListResponseDto> boardByCategory(
             @PathVariable Long categoryId,
-            @RequestParam(defaultValue = "0") int page) {
-        return boardService.getBoardListByCategory(categoryId, page);
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) String keyword) {
+        return boardService.getBoardListByCategory(categoryId, keyword, page);
     }
 
     /*

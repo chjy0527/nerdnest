@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -14,4 +15,16 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("SELECT b from Board b order by (b.view + b.likeCount) DESC ")
     List<Board> findTop3ByViewAndLikeCountDesc(Pageable pageable); // nerdKick 조회
+
+
+    // 카테고리 + 검색어
+    @Query("SELECT b FROM Board b WHERE b.category.id = :categoryId AND " +
+            "(LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR b.content LIKE CONCAT('%', :keyword, '%'))")
+    Page<Board> searchCategory(
+            @Param("categoryId") Long categoryId,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
 }
