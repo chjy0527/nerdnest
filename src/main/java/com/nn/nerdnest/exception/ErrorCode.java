@@ -23,6 +23,7 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "댓글을 찾을 수 없습니다."),
     COMMENT_ACCESS_DENIED(HttpStatus.FORBIDDEN, "C002", "댓글에 대한 권한이 없습니다."),
     PARENT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C003", "부모 댓글을 찾을 수 없습니다."),
+    TOO_DEEP_REPLY(HttpStatus.BAD_REQUEST, "C004", "대댓글에는 다시 댓글을 달 수 없습니다."),
 
     // JWT/인증 관련 오류
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "J001", "유효하지 않은 토큰입니다."),
