@@ -1,5 +1,6 @@
 package com.nn.nerdnest.member;
 
+import com.nn.nerdnest.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -46,7 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-                UserDetails userDetails = new User(username, "", authorities);
+               // UserDetails userDetails = new User(username, "", authorities);
+
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, authorities);

@@ -108,6 +108,7 @@ public class CommentService {
     }
 
     // 댓글 수정
+    @Transactional
     public CommentUpdateResponseDto getUpdateComment(
             Long commentId,
             CommentUpdateRequestDto commentUpdateRequestDto,
