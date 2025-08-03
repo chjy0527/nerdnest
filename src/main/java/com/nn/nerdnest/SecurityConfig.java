@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -49,8 +50,9 @@ public class SecurityConfig {
                                 "/api/boards/kick" // nerd's kick 조회
                         ).permitAll()// 인증 없이 접근 가능
 
+                        .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
                         .requestMatchers("/api/boards/**").hasRole("USER")//board 관련
-                        .requestMatchers("/api/comments/**").hasRole("USER") // comments 관련
+                        .requestMatchers("/api/comments/**").hasRole("USER")// comments 관련
 
                         .anyRequest().authenticated()// 다른 요청은 인증 필요
                 )
